@@ -1,19 +1,19 @@
-const Board = (() => {
-  const gameBoard = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
+const gameBoard = (() => {
+  const boardState = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
   const populateBoard = () => {
-    for (let i = 0; i < gameBoard.length; i++) {
+    for (let i = 0; i < boardState.length; i++) {
       let square = document.getElementById(i);
-      square.innerHTML = gameBoard[i];
+      square.innerHTML = boardState[i];
     }
   };
   populateBoard();
 })();
 
-const Display = (() => {
+const displayController = (() => {
   //
 })();
 
-const Player = (name, score) => {
+const playerFactory = (name, score) => {
   const getName = () => name;
   const getScore = () => score;
 };
