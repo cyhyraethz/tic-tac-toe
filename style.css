@@ -1,0 +1,19 @@
+body {
+  color: #eee;
+  background: #151515;
+  text-align: center;
+  font-size: 30px;
+}
+
+table {
+  width: 400px;
+  height: 400px;
+  font-size: 30px;
+  border-spacing: 0;
+  text-align: center;
+  margin: auto;
+}
+
+td {
+  border: 1px solid #aaa;
+}
