@@ -1,5 +1,5 @@
-const gameBoard = (() => {
-  let gameBoard = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
+const Board = (() => {
+  const gameBoard = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
   const populateBoard = () => {
     for (let i = 0; i < gameBoard.length; i++) {
       let square = document.getElementById(i);
@@ -9,11 +9,11 @@ const gameBoard = (() => {
   populateBoard();
 })();
 
-const displayController = (() => {
+const Display = (() => {
   //
 })();
 
-const playerFactory = (name, score) => {
+const Player = (name, score) => {
   const getName = () => name;
   const getScore = () => score;
 };
