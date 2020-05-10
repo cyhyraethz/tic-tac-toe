@@ -6,8 +6,8 @@ const playerFactory = (name, symbol) => {
   return { getName, getScore, getSymbol };
 };
 
-const playerX = playerFactory('Dylan', 'X');
-const playerO = playerFactory('Bob', 'O');
+const playerX = playerFactory(prompt('Name of Player X: '), 'X');
+const playerO = playerFactory(prompt('Name of Player O: '), 'O');
 
 const gameBoard = (() => {
   const boardState = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
