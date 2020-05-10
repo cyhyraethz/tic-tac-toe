@@ -10,12 +10,15 @@ table {
   height: 400px;
   font-size: 30px;
   border-spacing: 0;
+  table-layout: fixed;
   text-align: center;
   margin: auto;
 }
 
 td {
   border: 1px solid #aaa;
+  height: 133px;
+  width: 133px;
 }
 
 .score {
