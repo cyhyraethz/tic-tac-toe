@@ -1,3 +1,14 @@
+const playerFactory = (name, symbol) => {
+  let score = 0;
+  const getName = () => name;
+  const getScore = () => score;
+  const getSymbol = () => symbol;
+  return { getName, getScore, getSymbol };
+};
+
+const playerX = playerFactory('Dylan', 'X');
+const playerO = playerFactory('Bob', 'O');
+
 const gameBoard = (() => {
   const boardState = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
   const populateBoard = () => {
@@ -10,10 +21,8 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-  //
+  const playerXInput = document.getElementById('x');
+  const playerOInput = document.getElementById('o');
+  playerXInput.innerHTML = `${playerX.getName()} ${playerX.getScore()}`;
+  playerOInput.innerHTML = `${playerO.getName()} ${playerO.getScore()}`;
 })();
-
-const playerFactory = (name, score) => {
-  const getName = () => name;
-  const getScore = () => score;
-};

@@ -17,3 +17,10 @@ table {
 td {
   border: 1px solid #aaa;
 }
+
+.score {
+  display: inline;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px 10px;
+}
