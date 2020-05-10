@@ -1,7 +1,7 @@
 let round = 0;
 let counter = 0;
 const roundDisplay = document.getElementById('round');
-roundDisplay.innerHTML = `<h3>Round ${round} &nbsp;&nbsp;&nbsp; Turn ${counter}</h3>`;
+roundDisplay.innerHTML = `<h3>Round ${round} &nbsp;&nbsp; Turn ${counter}</h3>`;
 
 const playerFactory = (name, symbol) => {
   const topLeft = document.getElementById('0').innerHTML;
