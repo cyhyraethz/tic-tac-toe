@@ -54,9 +54,30 @@ const playerFactory = (name, symbol) => {
   const getSymbol = () => symbol;
   const winRound = () => {
     if (
-      topLeft.innerHTML === symbol &&
-      topMiddle.innerHTML === symbol &&
-      topRight.innerHTML === symbol
+      (topLeft.innerHTML === symbol &&
+        topMiddle.innerHTML === symbol &&
+        topRight.innerHTML === symbol) ||
+      (centerLeft.innerHTML === symbol &&
+        centerMiddle.innerHTML === symbol &&
+        centerRight.innerHTML === symbol) ||
+      (bottomLeft.innerHTML === symbol &&
+        bottomMiddle.innerHTML === symbol &&
+        bottomRight.innerHTML === symbol) ||
+      (topLeft.innerHTML === symbol &&
+        centerLeft.innerHTML === symbol &&
+        bottomLeft.innerHTML === symbol) ||
+      (topMiddle.innerHTML === symbol &&
+        centerMiddle.innerHTML === symbol &&
+        bottomMiddle.innerHTML === symbol) ||
+      (topRight.innerHTML === symbol &&
+        centerRight.innerHTML === symbol &&
+        bottomRight.innerHTML === symbol) ||
+      (topLeft.innerHTML === symbol &&
+        centerMiddle.innerHTML === symbol &&
+        bottomRight.innerHTML === symbol) ||
+      (topRight.innerHTML === symbol &&
+        centerMiddle.innerHTML === symbol &&
+        bottomLeft.innerHTML === symbol)
     ) {
       alert(`${name} wins this round!`);
       round++;
