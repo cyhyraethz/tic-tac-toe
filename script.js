@@ -58,7 +58,7 @@ const playerFactory = (name, symbol) => {
       topMiddle.innerHTML === symbol &&
       topRight.innerHTML === symbol
     ) {
-      alert('You win this round!');
+      alert(`${name} wins this round!`);
       round++;
       score++;
       counter = 0;
