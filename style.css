@@ -1,0 +1,29 @@
+body {
+  color: #eee;
+  background: #151515;
+  text-align: center;
+  font-size: 30px;
+}
+
+table {
+  width: 400px;
+  height: 400px;
+  font-size: 30px;
+  border-spacing: 0;
+  table-layout: fixed;
+  text-align: center;
+  margin: auto;
+}
+
+td {
+  border: 1px solid #aaa;
+  height: 133px;
+  width: 133px;
+}
+
+.row {
+  display: inline;
+  margin-right: 3px;
+  margin-left: 3px;
+  padding: 5px 10px;
+}
