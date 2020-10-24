@@ -1,9 +1,9 @@
 // module containing the state of the game
-const gameBoard = (() => {
-  let _gameBoard = ['x', 'o', 'x', 'o', 'x', 'o', 'x', 'o', 'x'];
-  const getState = () => _gameBoard;
+const board = (() => {
+  let _state = ['', '', '', '', '', '', '', '', ''];
+  const getState = () => _state;
   const setState = (player, index) => {
-    _gameBoard[index] = player.getSymbol;
+    _state[index] = player.getSymbol();
   }
   return {
     getState,
@@ -12,18 +12,22 @@ const gameBoard = (() => {
 })();
 
 // module for controlling the display
-const displayController = (() => {
+const display = (() => {
   const render = () => {
-    gameBoard.getState.forEach((value, index) => {
-      const square = document.getElementById(index.toString());
-      square.innerHTML = value;
-    })
+    let state = board.getState();
+    for (let i = 0; i < state.length; i++) {
+      let square = document.getElementById(i.toString());
+      square.innerHTML = state[i];
+    }
   }
   render();
+  return {
+    render
+  }
 })();
 
 // factory for creating new players
-const playerFactory = (name, symbol) => {
+const Player = (name, symbol) => {
   const getName = () => name;
   const getSymbol = () => symbol;
   return {
@@ -31,3 +35,10 @@ const playerFactory = (name, symbol) => {
     getSymbol
   }
 };
+
+// create sample players
+const arlo = Player('Arlo', 'O');
+const dylan = Player('Dylan', 'X');
+
+board.setState(dylan, 0);
+display.render();
