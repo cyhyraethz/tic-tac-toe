@@ -2,6 +2,11 @@
 const board = (() => {
   let _count = 0;
   let _state = ['', '', '', '', '', '', '', '', ''];
+  const _gameOver = () => {
+    if (_count === _state.length) {
+      setTimeout(function(){alert('Game over!')}, 0);
+    }
+  }
   const getState = () => _state;
   const setState = (index) => {
     if (_state[parseInt(index)] === '') {
@@ -13,6 +18,7 @@ const board = (() => {
       _count++;
     }
     display.render();
+    _gameOver();
   }
   return {
     getState,
@@ -22,14 +28,13 @@ const board = (() => {
 
 // module for controlling the display
 const display = (() => {
-  const render = () => {
+  const render = (callback) => {
     let state = board.getState();
     for (let i = 0; i < state.length; i++) {
       let square = document.getElementById(i.toString());
       square.innerHTML = state[i];
     }
   }
-  render();
   return {
     render
   }
