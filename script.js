@@ -1,9 +1,18 @@
 // module containing the state of the game
 const board = (() => {
+  let _count = 0;
   let _state = ['', '', '', '', '', '', '', '', ''];
   const getState = () => _state;
-  const setState = (player, index) => {
-    _state[index] = player.getSymbol();
+  const setState = (index) => {
+    if (_state[parseInt(index)] === '') {
+      if (_count % 2 === 0) {
+        _state[parseInt(index)] = player1.getSymbol();
+      } else {
+        _state[parseInt(index)] = player2.getSymbol();
+      }
+      _count++;
+    }
+    display.render();
   }
   return {
     getState,
@@ -28,8 +37,8 @@ const display = (() => {
 
 // factory for creating new players
 const Player = (name, symbol) => {
-  const getName = () => name;
   const getSymbol = () => symbol;
+  const getName = () => name;
   return {
     getName,
     getSymbol
@@ -37,8 +46,5 @@ const Player = (name, symbol) => {
 };
 
 // create sample players
-const arlo = Player('Arlo', 'O');
-const dylan = Player('Dylan', 'X');
-
-board.setState(dylan, 0);
-display.render();
+const player1 = Player('Arlo', 'O');
+const player2 = Player('Dylan', 'X');
