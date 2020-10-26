@@ -7,16 +7,16 @@ const board = (() => {
   // counts number of moves that have been played, useful for determining which player's turn it is
   let _count = 0;
 
-  // state of the game board, initialized to empty strings so that every square is empty at the start of the game
+  // state of the game board, initialized to empty strings so every square is empty at the start of the game
   let _state = ['', '', '', '', '', '', '', '', ''];
 
-  // check for a win condition, or for a tie
+  // check if game is over, and if it is either announce the winner or a tie
   const _gameOver = () => {
-    
+
     // message to announce when game is over, not announced if empty
     let msg;
 
-    // list of win conditions, if any of these arrays of indices are all the same symbol then that player has won
+    // list of win conditions, if any of these arrays of indices are the same symbol then that player has won
     const win = [
       [0, 1, 2], // top row
       [3, 4, 5], // middle row
@@ -45,20 +45,38 @@ const board = (() => {
       setTimeout(function(){alert(msg)}, 0);
     }
   }
+
+  // public method to return the state of the game board
   const getState = () => _state;
+
+  // public method that fills in an empty square with the current player's symbol
   const setState = (index) => {
+
+    // checks if the selected square is empty
     if (_state[parseInt(index)] === '') {
+
+      // if _count is even then it's player1's turn, else it's player2's turn
       if (_count % 2 === 0) {
         _player = player1;
       } else {
         _player = player2;
       }
+
+      // fills in the selected square with the current player's symbol
       _state[parseInt(index)] = _player.getSymbol();
+
+      // increments the _count variable
       _count++;
     }
+
+    // rerender the display
     display.render();
+
+    // check for a winner
     _gameOver();
   }
+
+  // public methods
   return {
     getState,
     setState
