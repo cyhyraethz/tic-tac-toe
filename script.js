@@ -37,14 +37,20 @@ const board = (() => {
     }
     if (typeof msg === 'string') { // if the current round is over, announce the winner and reset the board
       setTimeout(function(){
-        alert(msg); // anounce the winner
-        _reset(); // reset the board
         _round++;
+        _reset(); // reset the board
+        alert(msg); // anounce the winner
       }, 0);
     }
   }
 
-  // public method that returns the state of the board
+  // public method to access the current round
+  const getRound = () => _round;
+
+  // public method to access the current score
+  const getScore = () => _score;
+
+  // public method to access the state of the board
   const getState = () => _state;
 
   // public method that fills in an empty square with the current player's symbol
@@ -72,6 +78,8 @@ const board = (() => {
 
   // make public methods accessible
   return {
+    getRound,
+    getScore,
     getState,
     setState,
   }
@@ -81,14 +89,23 @@ const board = (() => {
 
 // module for controlling the display
 const display = (() => {
-  // public method to render the current state of the board
+  // public method that renders the current state of the board, the round, and the score
   const render = () => {
-    let state = board.getState();
+    const state = board.getState();
+    const round = document.getElementById('round');
+    const player1 = document.getElementById('player1');
+    const player2 = document.getElementById('player2');
+    round.innerHTML = board.getRound();
+    player1.innerHTML = board.getScore().player1;
+    player2.innerHTML = board.getScore().player2;
     for (let i = 0; i < state.length; i++) {
-      let square = document.getElementById(i.toString());
+      const square = document.getElementById(i.toString());
       square.innerHTML = state[i];
     }
   }
+
+  // render the initial state of the board
+  render();
 
   // make public methods accessible
   return {
