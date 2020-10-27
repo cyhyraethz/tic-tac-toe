@@ -4,7 +4,7 @@ const board = (() => {
   let _round = 0; // number of rounds that have been played
   let _count = 0; // number of moves that have been played, used to determine whose turn it is
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
-  let _score = [0, 0]; // number of rounds won by each player
+  let _score = { player1: 0, player2: 0 }; // number of rounds won by each player
 
   // private method that resets the board
   const _reset = () => {
@@ -29,6 +29,7 @@ const board = (() => {
     win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
       if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
         msg = _player.getName() + " wins!";
+        _score[_player.getNumber()] += 1;
       }
     });
     if (_count === _state.length) { // if every square is filled in, assign a string to msg announcing a tie
@@ -72,7 +73,7 @@ const board = (() => {
   // make public methods accessible
   return {
     getState,
-    setState
+    setState,
   }
 })();
 
@@ -91,14 +92,17 @@ const display = (() => {
 
   // make public methods accessible
   return {
-    render
+    render,
   }
 })();
 
 
 
 // factory for creating new players
-const Player = (name, symbol) => {
+const Player = (name, symbol, number) => {
+  // public method to access the player's number
+  const getNumber = () => number;
+
   // public method to access the player's symbol
   const getSymbol = () => symbol;
 
@@ -107,13 +111,14 @@ const Player = (name, symbol) => {
 
   // make public methods accessible
   return {
+    getNumber,
+    getSymbol,
     getName,
-    getSymbol
   }
 };
 
 
 
 // create sample players
-const player1 = Player('Arlo', 'O');
-const player2 = Player('Dylan', 'X');
+const player1 = Player('Arlo', 'O', 'player1');
+const player2 = Player('Dylan', 'X', 'player2');
