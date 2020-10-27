@@ -1,22 +1,20 @@
 // module containing the state of the game
 const board = (() => {
+  let _player; // player who's turn it is
+  let _count = 0; // number of moves that have been played, used to determine which player's turn it is
+  let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
 
-  // player who's turn it is
-  let _player;
+  // private method that resets the board
+  const _reset = () => {
+    _count = 0;
+    _state = ['', '', '', '', '', '', '', '', ''];
+    display.render();
+  }
 
-  // counts number of moves that have been played, useful for determining which player's turn it is
-  let _count = 0;
-
-  // state of the game board, initialized to empty strings so every square is empty at the start of the game
-  let _state = ['', '', '', '', '', '', '', '', ''];
-
-  // check if game is over, and if it is either announce the winner or a tie
+  // private method that checks if the game is over and announces the winner, or a tie, if it is
   const _gameOver = () => {
-
-    // message to announce when game is over, not announced if empty
-    let msg;
-
-    // list of win conditions, if any of these arrays of indices are the same symbol then that player has won
+    let msg; // message to announce if game is over
+    // list of win conditions, indices of consecutive squares
     const win = [
       [0, 1, 2], // top row
       [3, 4, 5], // middle row
@@ -27,53 +25,41 @@ const board = (() => {
       [0, 4, 8], // diagonal down
       [2, 4, 6], // diagonal up
     ];
-
-    // if any of the win conditions has been met, assigns a string to msg announcing the winner
+    // if any of the win conditions has been met, assign a string announcing the winner
     win.forEach(a => {
       if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
         msg = _player.getName() + " wins!";
       }
     });
-
-    // if neither player has won, but every square is filled in, assigns a string to msg announcing a tie
+    // if every square is filled in, assign a string to msg announcing a tie
     if (_count === _state.length) {
       msg = "It's a tie!";
     }
-
-    // if a string has been assigned to msg, alerts the string after rendering changes to the DOM
+    // if the current round is over, announce the winner and reset the board
     if (typeof msg === 'string') {
-      setTimeout(function(){alert(msg)}, 0);
+      setTimeout(function(){
+        alert(msg); // anounce the winner
+        _reset(); // reset the board
+      }, 0);
     }
   }
 
-  // public method to return the state of the game board
+  // public method that returns the state of the board
   const getState = () => _state;
 
   // public method that fills in an empty square with the current player's symbol
   const setState = (index) => {
-
-    // checks if the selected square is empty
-    if (_state[parseInt(index)] === '') {
-
-      // if _count is even then it's player1's turn, else it's player2's turn
+    if (_state[parseInt(index)] === '') { // checks if the selected square is empty
       if (_count % 2 === 0) {
-        _player = player1;
+        _player = player1; // if _count is even, it's player1's turn
       } else {
-        _player = player2;
+        _player = player2; // if _count is odd, it's player2's turn
       }
-
-      // fills in the selected square with the current player's symbol
-      _state[parseInt(index)] = _player.getSymbol();
-
-      // increments the _count variable
-      _count++;
+      _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
+      _count++; // increments the _count variable
     }
-
-    // rerender the display
-    display.render();
-
-    // check for a winner
-    _gameOver();
+    display.render(); // rerender the display
+    _gameOver(); // check for a winner
   }
 
   // make public methods accessible
@@ -83,10 +69,11 @@ const board = (() => {
   }
 })();
 
+
+
 // module for controlling the display
 const display = (() => {
-
-  // public method to render the current state of the game board
+  // public method to render the current state of the board
   const render = () => {
     let state = board.getState();
     for (let i = 0; i < state.length; i++) {
@@ -95,15 +82,16 @@ const display = (() => {
     }
   }
 
-  // make public method accessible
+  // make public methods accessible
   return {
     render
   }
 })();
 
+
+
 // factory for creating new players
 const Player = (name, symbol) => {
-
   // public method to access the player's symbol
   const getSymbol = () => symbol;
 
@@ -116,6 +104,8 @@ const Player = (name, symbol) => {
     getSymbol
   }
 };
+
+
 
 // create sample players
 const player1 = Player('Arlo', 'O');
