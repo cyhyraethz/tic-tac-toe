@@ -1,8 +1,9 @@
 // module containing the state of the game
 const board = (() => {
   let _player; // player who's turn it is
-  let _count = 0; // number of moves that have been played, used to determine which player's turn it is
+  let _count = 0; // number of moves that have been played, used to determine whose turn it is
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
+  let _score = [0, 0]; // number of rounds won by each player
 
   // private method that resets the board
   const _reset = () => {
@@ -51,9 +52,9 @@ const board = (() => {
   const setState = (index) => {
     if (_state[parseInt(index)] === '') { // checks if the selected square is empty
       if (_count % 2 === 0) {
-        _player = player1; // if _count is even, it's player1's turn
+        _player = player1; // if an even number of moves have been played, it's player1's turn
       } else {
-        _player = player2; // if _count is odd, it's player2's turn
+        _player = player2; // if an odd number of moves have been played, it's player2's turn
       }
       _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
       _count++; // increments the _count variable
