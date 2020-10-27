@@ -76,7 +76,7 @@ const board = (() => {
     _gameOver();
   }
 
-  // public methods
+  // make public methods accessible
   return {
     getState,
     setState
@@ -85,13 +85,17 @@ const board = (() => {
 
 // module for controlling the display
 const display = (() => {
-  const render = (callback) => {
+
+  // public method to render the current state of the game board
+  const render = () => {
     let state = board.getState();
     for (let i = 0; i < state.length; i++) {
       let square = document.getElementById(i.toString());
       square.innerHTML = state[i];
     }
   }
+
+  // make public method accessible
   return {
     render
   }
@@ -99,8 +103,14 @@ const display = (() => {
 
 // factory for creating new players
 const Player = (name, symbol) => {
+
+  // public method to access the player's symbol
   const getSymbol = () => symbol;
+
+  // public method to access the player's name
   const getName = () => name;
+
+  // make public methods accessible
   return {
     getName,
     getSymbol
