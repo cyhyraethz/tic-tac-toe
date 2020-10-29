@@ -129,18 +129,23 @@ const board = (() => {
 const display = (() => {
   // public method that renders the current state of the board, the round, and the score
   const render = () => {
-    const state = board.getState();
-    const round = document.getElementById('round');
-    const playerOneScore = document.getElementById('playerOneScore');
-    const playerTwoScore = document.getElementById('playerTwoScore');
-    round.innerHTML = board.getRound();
-    playerOneScore.innerHTML = player1.getName() + " " + board.getScore().player1;
-    playerTwoScore.innerHTML = player2.getName() + " " + board.getScore().player2;
-    playerOneScore.style.color = player1.getColor();
-    playerTwoScore.style.color = player2.getColor();
-    for (let i = 0; i < state.length; i++) {
-      const square = document.getElementById(i.toString());
-      square.innerHTML = state[i];
+    const state = board.getState(); // state of the board
+    const round = document.getElementById('round'); // element that displays the current round
+    const playerOneScore = document.getElementById('playerOneScore'); // element that displays player1's score
+    const playerTwoScore = document.getElementById('playerTwoScore'); // element that displays player2's score
+    round.innerHTML = board.getRound(); // display the current round
+    playerOneScore.innerHTML = player1.getName() + " " + board.getScore().player1; // display player1's score
+    playerTwoScore.innerHTML = player2.getName() + " " + board.getScore().player2; // display player2's score
+    playerOneScore.style.color = player1.getColor(); // show player1's score in their specific color
+    playerTwoScore.style.color = player2.getColor(); // show player2's score in their specific color
+    for (let i = 0; i < state.length; i++) { // iterates over the state array and the grid squares
+      const square = document.getElementById(i.toString()); // grid square corresponding to the current state value
+      square.innerHTML = state[i]; // display the current state value
+      if (state[i] === 'O') {
+        square.style.color = player1.getColor(); // if current state value is an O, show it in player1's color
+      } else if (state[i] === 'X') {
+        square.style.color = player2.getColor(); // if current state value is an X, show it in player2's color
+      }
     }
   }
 
