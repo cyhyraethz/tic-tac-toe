@@ -1,3 +1,34 @@
+// factory for creating new players
+const Player = (name, symbol, color, number) => {
+  // public method to access the player's name
+  const getName = () => name;
+  
+  // public method to access the player's symbol
+  const getSymbol = () => symbol;
+
+  // public method to access the player's color
+  const getColor = () => color;
+
+  // public method to access the player's number
+  const getNumber = () => number;
+
+  // make public methods accessible
+  return {
+    getName,
+    getSymbol,
+    getColor,
+    getNumber,
+  }
+};
+
+
+
+// create sample players
+const player1 = Player('Arlo', 'O', 'firebrick', 'player1');
+const player2 = Player('Dylan', 'X', 'dodgerblue', 'player2');
+
+
+
 // module containing the state of the game
 const board = (() => {
   let _player; // player who's turn it is
@@ -5,6 +36,8 @@ const board = (() => {
   let _count = 0; // number of moves that have been played, used to determine whose turn it is
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
   let _score = { player1: 0, player2: 0 }; // number of rounds won by each player
+  const _neutralColor = "forestgreen"; // neutral color for announcing a tie
+  const _result = document.getElementById('result'); // dom element for announcing a winner
 
   // private method that resets the board
   const _reset = () => {
@@ -39,7 +72,12 @@ const board = (() => {
       setTimeout(function(){
         _round++;
         _reset(); // reset the board
-        alert(msg); // anounce the winner
+        result.innerHTML = msg; // anounce the result of the current round
+        if (msg === "It's a tie!") {
+          _result.style.color = _neutralColor; // announce a tie in a neutral color
+        } else {
+          result.style.color = _player.getColor(); // announce a win in the player's color
+        }
       }, 0);
     }
   }
@@ -93,11 +131,13 @@ const display = (() => {
   const render = () => {
     const state = board.getState();
     const round = document.getElementById('round');
-    const player1 = document.getElementById('player1');
-    const player2 = document.getElementById('player2');
+    const playerOneScore = document.getElementById('playerOneScore');
+    const playerTwoScore = document.getElementById('playerTwoScore');
     round.innerHTML = board.getRound();
-    player1.innerHTML = board.getScore().player1;
-    player2.innerHTML = board.getScore().player2;
+    playerOneScore.innerHTML = player1.getName() + " " + board.getScore().player1;
+    playerTwoScore.innerHTML = player2.getName() + " " + board.getScore().player2;
+    playerOneScore.style.color = player1.getColor();
+    playerTwoScore.style.color = player2.getColor();
     for (let i = 0; i < state.length; i++) {
       const square = document.getElementById(i.toString());
       square.innerHTML = state[i];
@@ -112,30 +152,3 @@ const display = (() => {
     render,
   }
 })();
-
-
-
-// factory for creating new players
-const Player = (name, symbol, number) => {
-  // public method to access the player's number
-  const getNumber = () => number;
-
-  // public method to access the player's symbol
-  const getSymbol = () => symbol;
-
-  // public method to access the player's name
-  const getName = () => name;
-
-  // make public methods accessible
-  return {
-    getNumber,
-    getSymbol,
-    getName,
-  }
-};
-
-
-
-// create sample players
-const player1 = Player('Arlo', 'O', 'player1');
-const player2 = Player('Dylan', 'X', 'player2');

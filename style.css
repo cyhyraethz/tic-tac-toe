@@ -27,3 +27,7 @@ td {
   margin-left: 3px;
   padding: 5px 10px;
 }
+
+#result {
+  font-size: 50px;
+}
