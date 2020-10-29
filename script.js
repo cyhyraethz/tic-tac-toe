@@ -32,7 +32,7 @@ const player2 = Player('Dylan', 'X', 'dodgerblue', 'player2');
 // module containing the state of the game
 const board = (() => {
   let _player; // player who's turn it is
-  let _round = 0; // number of rounds that have been played
+  let _round = 1; // number of rounds that have been played
   let _count = 0; // number of moves that have been played, used to determine whose turn it is
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
   let _score = { player1: 0, player2: 0 }; // number of rounds won by each player
@@ -61,7 +61,7 @@ const board = (() => {
     ];
     win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
       if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
-        msg = _player.getName() + " wins!";
+        msg = `${_player.getName()} wins round ${_round}!`;
         _score[_player.getNumber()] += 1;
       }
     });
@@ -79,6 +79,9 @@ const board = (() => {
           result.style.color = _player.getColor(); // announce a win in the player's color
         }
       }, 0);
+      setTimeout(function(){
+        result.innerHTML = '';
+      }, 2500)
     }
   }
 
