@@ -169,3 +169,17 @@ const display = (() => {
     render,
   }
 })();
+
+
+
+
+
+
+// To do:
+// // -Start game by only display two buttons, "Single Player", and "Multiplayer".
+// // -Create an AI that a person can play against in "Single Player".
+// // -Add a restart button that prompts the user for confirmation.
+// // -When confirmed, clears the display leaving only the two original buttons, 
+// //     and resets all variables, without ever reloading the web page.
+// // -Replace the name change prompt with a temporary input field in place 
+// //     of the name on the score board.
