@@ -1,7 +1,9 @@
 // factory for creating new players
 const Player = (name, symbol, color, number) => {
+  let _name = name; // player's name
+
   // public method to access the player's name
-  const getName = () => name;
+  const getName = () => _name;
   
   // public method to access the player's symbol
   const getSymbol = () => symbol;
@@ -12,20 +14,27 @@ const Player = (name, symbol, color, number) => {
   // public method to access the player's number
   const getNumber = () => number;
 
+  // public method to set the player's name
+  const setName = () => {
+    _name = prompt('Enter new name:');
+    display.render();
+  }
+
   // make public methods accessible
   return {
     getName,
     getSymbol,
     getColor,
     getNumber,
+    setName,
   }
 };
 
 
 
 // create sample players
-const player1 = Player('Arlo', 'O', 'firebrick', 'player1');
-const player2 = Player('Dylan', 'X', 'dodgerblue', 'player2');
+const player1 = Player('Player1', 'O', 'firebrick', 'player1');
+const player2 = Player('Player2', 'X', 'dodgerblue', 'player2');
 
 
 
