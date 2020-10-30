@@ -16,7 +16,7 @@ const Player = (name, symbol, color, number) => {
 
   // public method to set the player's name
   const setName = () => {
-    _name = prompt('Enter new name:');
+    _name = prompt('Enter new name:') || _name;
     display.render();
   }
 
