@@ -46,7 +46,6 @@ const board = (() => {
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
   let _score = { player1: 0, player2: 0 }; // number of rounds won by each player
   const _neutralColor = "forestgreen"; // neutral color for announcing a tie
-  const _result = document.getElementById('result'); // dom element for announcing a winner
 
   // private method that resets the board
   const _reset = () => {
@@ -58,6 +57,7 @@ const board = (() => {
   // private method that checks if the game is over and announces the winner, or a tie, if it is
   const _gameOver = () => {
     let msg; // message to announce if game is over
+    const _result = document.getElementById('result'); // dom element for announcing a winner
     const win = [ // list of win conditions, indices of consecutive squares
       [0, 1, 2], // top row
       [3, 4, 5], // middle row
@@ -81,15 +81,15 @@ const board = (() => {
       setTimeout(function(){
         _round++;
         _reset(); // reset the board
-        result.innerHTML = msg; // anounce the result of the current round
+        _result.innerHTML = msg; // anounce the result of the current round
         if (msg === "It's a tie!") {
           _result.style.color = _neutralColor; // announce a tie in a neutral color
         } else {
-          result.style.color = _player.getColor(); // announce a win in the player's color
+          _result.style.color = _player.getColor(); // announce a win in the player's color
         }
       }, 0);
       setTimeout(function(){
-        result.innerHTML = '';
+        _result.innerHTML = '';
       }, 2500)
     }
   }
@@ -139,6 +139,50 @@ const board = (() => {
 
 // module for controlling the display
 const display = (() => {
+  const _display = document.getElementById('display');
+  const _br = document.createElement('br');
+  
+  const _result = document.createElement('div');
+  _result.className = 'row';
+  _result.id = 'result';
+  _display.appendChild(_result);
+  
+  _display.appendChild(_br);
+  _display.appendChild(_br.cloneNode(true));
+
+  const _roundContainer = document.createElement('div');
+  _roundContainer.innerHTML = 'Round:';
+  _roundContainer.id = 'roundContainer';
+  _display.appendChild(_roundContainer);
+  
+  const _round = document.createElement('div');
+  _round.className = 'row';
+  _round.id = 'round';
+  _roundContainer.appendChild(_round);
+
+  _display.appendChild(_br.cloneNode(true));
+  
+  const _scoreContainer = document.createElement('div');
+  _scoreContainer.id = 'scoreContainer';
+  _scoreContainer.innerHTML = 'Score:';
+  _scoreContainer.className = 'row';
+  _display.appendChild(_scoreContainer);
+
+  const _playerOneScore = document.createElement('div');
+  _playerOneScore.onclick = player1.setName;
+  _playerOneScore.id = 'playerOneScore';
+  _playerOneScore.className = 'row';
+  _scoreContainer.appendChild(_playerOneScore);
+
+  const _playerTwoScore = document.createElement('div');
+  _playerTwoScore.onclick = player2.setName;
+  _playerTwoScore.id = 'playerTwoScore';
+  _playerTwoScore.className = 'row';
+  _scoreContainer.appendChild(_playerTwoScore);
+
+  _display.appendChild(_br.cloneNode(true));
+  _display.appendChild(_br.cloneNode(true));
+
   // public method that renders the current state of the board, the round, and the score
   const render = () => {
     const state = board.getState(); // state of the board
