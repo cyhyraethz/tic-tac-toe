@@ -16,7 +16,7 @@ const Player = (name, symbol, color, number) => {
 
   // public method to set the player's name
   const setName = () => {
-    _name = prompt('Enter new name:') || _name;
+    _name = prompt('Enter new name (max 12 characters):').slice(0, 12) || _name;
     display.render();
   }
 
