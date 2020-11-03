@@ -94,6 +94,14 @@ const board = (() => {
     }
   }
 
+  // public method to restart the state of the game
+  const restart = () => {
+    _round = 1;
+    _count = 0;
+    _state = ['', '', '', '', '', '', '', '', ''];
+    _score = { player1: 0, player2: 0 };
+  }
+
   // public method to access the current round
   const getRound = () => _round;
 
@@ -128,6 +136,7 @@ const board = (() => {
 
   // make public methods accessible
   return {
+    restart,
     getRound,
     getScore,
     getState,
@@ -139,8 +148,8 @@ const board = (() => {
 
 // module for controlling the display
 const display = (() => {
-  // private method that initializes the page with a singleplayer and multiplayer button
-  const _init = (() => {
+  // private method that replaces the display with singleplayer and multiplayer choice
+  const _renderChoice = () => {
     // function that starts game against an AI opponent
     const singleFunc = () => {
       _renderDisplay();
@@ -172,11 +181,20 @@ const display = (() => {
     multiButton.onclick = multiFunc;
     multiButton.innerHTML = 'Multiplayer';
     display.appendChild(multiButton);
-  })();
+  };
+
+  // initializes the page with buttons for player to choose singleplayer or multiplayer
+  _renderChoice();
 
   // private method that renders the display, replacing buttons with board, score, round
   const _renderDisplay = () => {
-    // 
+    // function that restarts the game state back to single/multi player selection
+    const restartFunc = () => {
+      if (confirm('Restart the game (current score and round count will be lost)?')) {
+        board.restart();
+        _renderChoice();
+      }
+    }
 
     // element that elements are appended to
     const display = document.getElementById('display');
@@ -206,11 +224,11 @@ const display = (() => {
     round.id = 'round';
     roundContainer.appendChild(round);
 
-    const restart = document.createElement('button');
-    restart.innerHTML = 'Restart';
-    restart.id = 'restart';
-    restart.onclick = this._init;
-    roundContainer.appendChild(restart);
+    const restartButton = document.createElement('button');
+    restartButton.innerHTML = 'Restart';
+    restartButton.id = 'restart';
+    restartButton.onclick = restartFunc;
+    roundContainer.appendChild(restartButton);
     
     // more spacing, possibly replace with css
     display.appendChild(br.cloneNode(true));
