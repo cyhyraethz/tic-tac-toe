@@ -17,7 +17,7 @@ const Player = (name, symbol, color, number) => {
   // public method to set the player's name
   const setName = () => {
     _name = prompt('Enter new name (max 12 characters):').slice(0, 12) || _name;
-    display.render();
+    display.renderState();
   }
 
   // make public methods accessible
@@ -51,13 +51,13 @@ const board = (() => {
   const _reset = () => {
     _count = 0;
     _state = ['', '', '', '', '', '', '', '', ''];
-    display.render();
+    display.renderState();
   }
 
   // private method that checks if the game is over and announces the winner, or a tie, if it is
   const _gameOver = () => {
     let msg; // message to announce if game is over
-    const _result = document.getElementById('result'); // dom element for announcing a winner
+    const _result = document.getElementById('result'); // element for announcing a winner
     const win = [ // list of win conditions, indices of consecutive squares
       [0, 1, 2], // top row
       [3, 4, 5], // middle row
@@ -122,7 +122,7 @@ const board = (() => {
       _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
       _count++; // increments the _count variable
     }
-    display.render(); // rerender the display
+    display.renderState(); // rerender the state of the board, round, and score
     _gameOver(); // check for a winner
   }
 
@@ -139,52 +139,114 @@ const board = (() => {
 
 // module for controlling the display
 const display = (() => {
-  const _display = document.getElementById('display');
-  const _br = document.createElement('br');
-  
-  const _result = document.createElement('div');
-  _result.className = 'row';
-  _result.id = 'result';
-  _display.appendChild(_result);
-  
-  _display.appendChild(_br);
-  _display.appendChild(_br.cloneNode(true));
+  // private method that initializes the page with a singleplayer and multiplayer button
+  const _init = (() => {
+    // function that starts game against an AI opponent
+    const singleFunc = () => {
+      _renderDisplay();
+      renderState();
+    }
 
-  const _roundContainer = document.createElement('div');
-  _roundContainer.innerHTML = 'Round:';
-  _roundContainer.id = 'roundContainer';
-  _display.appendChild(_roundContainer);
-  
-  const _round = document.createElement('div');
-  _round.className = 'row';
-  _round.id = 'round';
-  _roundContainer.appendChild(_round);
+    // function that starts game against another player
+    const multiFunc = () => {
+      _renderDisplay();
+      renderState();
+    }
 
-  _display.appendChild(_br.cloneNode(true));
-  
-  const _scoreContainer = document.createElement('div');
-  _scoreContainer.id = 'scoreContainer';
-  _scoreContainer.innerHTML = 'Score:';
-  _scoreContainer.className = 'row';
-  _display.appendChild(_scoreContainer);
+    // element that elements are appended to
+    const _display = document.getElementById('display');
 
-  const _playerOneScore = document.createElement('div');
-  _playerOneScore.onclick = player1.setName;
-  _playerOneScore.id = 'playerOneScore';
-  _playerOneScore.className = 'row';
-  _scoreContainer.appendChild(_playerOneScore);
+    // button that starts game against an AI opponent
+    const singleButton = document.createElement('button');
+    singleButton.className = 'btn';
+    singleButton.onclick = singleFunc;
+    singleButton.innerHTML = 'Singleplayer';
+    _display.appendChild(singleButton);
 
-  const _playerTwoScore = document.createElement('div');
-  _playerTwoScore.onclick = player2.setName;
-  _playerTwoScore.id = 'playerTwoScore';
-  _playerTwoScore.className = 'row';
-  _scoreContainer.appendChild(_playerTwoScore);
+    // button that starts game against another player
+    const multiButton = document.createElement('button');
+    multiButton.className = 'btn';
+    multiButton.onclick = multiFunc;
+    multiButton.innerHTML = 'Multiplayer';
+    _display.appendChild(multiButton);
+  })();
 
-  _display.appendChild(_br.cloneNode(true));
-  _display.appendChild(_br.cloneNode(true));
+  // private method that renders the display, replacing buttons with board, score, round
+  const _renderDisplay = () => {
+    // element that elements are appended to
+    const _display = document.getElementById('display');
+    
+    // wipes the display, removing initial buttons
+    _display.innerHTML = '';
+    
+    // element for announcing the winner of a round
+    const _result = document.createElement('div');
+    _result.className = 'row';
+    _result.id = 'result';
+    _display.appendChild(_result);
+    
+    // element to add extra space below previous element, possibly replace with css
+    const _br = document.createElement('br');
+    _display.appendChild(_br);
+    _display.appendChild(_br.cloneNode(true));
+    
+    // element for displaying the current round
+    const _roundContainer = document.createElement('div');
+    _roundContainer.innerHTML = 'Round:';
+    _display.appendChild(_roundContainer);
+    
+    // element that holds the current round number
+    const _round = document.createElement('div');
+    _round.className = 'row';
+    _round.id = 'round';
+    _roundContainer.appendChild(_round);
+    
+    // more spacing, possibly replace with css
+    _display.appendChild(_br.cloneNode(true));
+    
+    // element for displaying the current score
+    const _scoreContainer = document.createElement('div');
+    _scoreContainer.innerHTML = 'Score:';
+    _scoreContainer.className = 'row';
+    _display.appendChild(_scoreContainer);
+    
+    // element that holds Player1's score
+    const _playerOneScore = document.createElement('div');
+    _playerOneScore.onclick = player1.setName;
+    _playerOneScore.id = 'playerOneScore';
+    _playerOneScore.className = 'row';
+    _scoreContainer.appendChild(_playerOneScore);
+    
+    // element that holds Player2's score
+    const _playerTwoScore = document.createElement('div');
+    _playerTwoScore.onclick = player2.setName;
+    _playerTwoScore.id = 'playerTwoScore';
+    _playerTwoScore.className = 'row';
+    _scoreContainer.appendChild(_playerTwoScore);
+    
+    // more spacing, possibly replace with css
+    _display.appendChild(_br.cloneNode(true));
+    _display.appendChild(_br.cloneNode(true));
+    
+    // element for displaying the game board
+    const _table = document.createElement('table');
+    _display.appendChild(_table);
 
+    // populates the board with 9 squares, each with unique IDs
+    for (let i = 0; i < 3; i++) {
+      const _row = document.createElement('tr');
+      _table.appendChild(_row);
+      for (let j = 0; j < 3; j++) {
+        const _square = document.createElement('td');
+        _square.onclick = function(){board.setState(this.id)};
+        _square.id = (j + (i * 3));
+        _row.appendChild(_square);
+      }
+    }
+  }
+    
   // public method that renders the current state of the board, the round, and the score
-  const render = () => {
+  const renderState = () => {
     const state = board.getState(); // state of the board
     const round = document.getElementById('round'); // element that displays the current round
     const playerOneScore = document.getElementById('playerOneScore'); // element that displays player1's score
@@ -205,12 +267,9 @@ const display = (() => {
     }
   }
 
-  // render the initial state of the board
-  render();
-
   // make public methods accessible
   return {
-    render,
+    renderState,
   }
 })();
 
