@@ -154,93 +154,104 @@ const display = (() => {
     }
 
     // element that elements are appended to
-    const _display = document.getElementById('display');
+    const display = document.getElementById('display');
+
+    // wipes the display, removing the board
+    display.innerHTML = '';
 
     // button that starts game against an AI opponent
     const singleButton = document.createElement('button');
     singleButton.className = 'btn';
     singleButton.onclick = singleFunc;
     singleButton.innerHTML = 'Singleplayer';
-    _display.appendChild(singleButton);
+    display.appendChild(singleButton);
 
     // button that starts game against another player
     const multiButton = document.createElement('button');
     multiButton.className = 'btn';
     multiButton.onclick = multiFunc;
     multiButton.innerHTML = 'Multiplayer';
-    _display.appendChild(multiButton);
+    display.appendChild(multiButton);
   })();
 
   // private method that renders the display, replacing buttons with board, score, round
   const _renderDisplay = () => {
+    // 
+
     // element that elements are appended to
-    const _display = document.getElementById('display');
+    const display = document.getElementById('display');
     
     // wipes the display, removing initial buttons
-    _display.innerHTML = '';
+    display.innerHTML = '';
     
     // element for announcing the winner of a round
-    const _result = document.createElement('div');
-    _result.className = 'row';
-    _result.id = 'result';
-    _display.appendChild(_result);
+    const result = document.createElement('div');
+    result.className = 'row';
+    result.id = 'result';
+    display.appendChild(result);
     
     // element to add extra space below previous element, possibly replace with css
-    const _br = document.createElement('br');
-    _display.appendChild(_br);
-    _display.appendChild(_br.cloneNode(true));
+    const br = document.createElement('br');
+    display.appendChild(br);
+    display.appendChild(br.cloneNode(true));
     
     // element for displaying the current round
-    const _roundContainer = document.createElement('div');
-    _roundContainer.innerHTML = 'Round:';
-    _display.appendChild(_roundContainer);
+    const roundContainer = document.createElement('div');
+    roundContainer.innerHTML = 'Round:';
+    display.appendChild(roundContainer);
     
     // element that holds the current round number
-    const _round = document.createElement('div');
-    _round.className = 'row';
-    _round.id = 'round';
-    _roundContainer.appendChild(_round);
+    const round = document.createElement('div');
+    round.className = 'row';
+    round.id = 'round';
+    roundContainer.appendChild(round);
+
+    const restart = document.createElement('button');
+    restart.innerHTML = 'Restart';
+    restart.id = 'restart';
+    restart.onclick = this._init;
+    roundContainer.appendChild(restart);
     
     // more spacing, possibly replace with css
-    _display.appendChild(_br.cloneNode(true));
+    display.appendChild(br.cloneNode(true));
     
     // element for displaying the current score
-    const _scoreContainer = document.createElement('div');
-    _scoreContainer.innerHTML = 'Score:';
-    _scoreContainer.className = 'row';
-    _display.appendChild(_scoreContainer);
+    const scoreContainer = document.createElement('div');
+    scoreContainer.innerHTML = 'Score:';
+    scoreContainer.className = 'row';
+    display.appendChild(scoreContainer);
     
     // element that holds Player1's score
-    const _playerOneScore = document.createElement('div');
-    _playerOneScore.onclick = player1.setName;
-    _playerOneScore.id = 'playerOneScore';
-    _playerOneScore.className = 'row';
-    _scoreContainer.appendChild(_playerOneScore);
+    const playerOneScore = document.createElement('div');
+    playerOneScore.onclick = player1.setName;
+    playerOneScore.id = 'playerOneScore';
+    playerOneScore.className = 'row';
+    scoreContainer.appendChild(playerOneScore);
     
     // element that holds Player2's score
-    const _playerTwoScore = document.createElement('div');
-    _playerTwoScore.onclick = player2.setName;
-    _playerTwoScore.id = 'playerTwoScore';
-    _playerTwoScore.className = 'row';
-    _scoreContainer.appendChild(_playerTwoScore);
+    const playerTwoScore = document.createElement('div');
+    playerTwoScore.onclick = player2.setName;
+    playerTwoScore.id = 'playerTwoScore';
+    playerTwoScore.className = 'row';
+    scoreContainer.appendChild(playerTwoScore);
     
     // more spacing, possibly replace with css
-    _display.appendChild(_br.cloneNode(true));
-    _display.appendChild(_br.cloneNode(true));
+    display.appendChild(br.cloneNode(true));
+    display.appendChild(br.cloneNode(true));
     
     // element for displaying the game board
-    const _table = document.createElement('table');
-    _display.appendChild(_table);
+    const table = document.createElement('table');
+    display.appendChild(table);
 
     // populates the board with 9 squares, each with unique IDs
     for (let i = 0; i < 3; i++) {
-      const _row = document.createElement('tr');
-      _table.appendChild(_row);
+      const row = document.createElement('tr');
+      table.appendChild(row);
       for (let j = 0; j < 3; j++) {
-        const _square = document.createElement('td');
-        _square.onclick = function(){board.setState(this.id)};
-        _square.id = (j + (i * 3));
-        _row.appendChild(_square);
+        const square = document.createElement('td');
+        square.onclick = function(){board.setState(this.id)};
+        square.id = (j + (i * 3));
+        row.appendChild(square);
       }
     }
   }
