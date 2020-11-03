@@ -14,6 +14,11 @@ const Player = (name, symbol, color, number) => {
   // public method to access the player's number
   const getNumber = () => number;
 
+  // public method to reset the player's name
+  const resetName = () => {
+    _name = name;
+  }
+
   // public method to set the player's name
   const setName = () => {
     _name = prompt('Enter new name (max 12 characters):').slice(0, 12) || _name;
@@ -26,6 +31,7 @@ const Player = (name, symbol, color, number) => {
     getSymbol,
     getColor,
     getNumber,
+    resetName,
     setName,
   }
 };
@@ -191,6 +197,8 @@ const display = (() => {
     // function that restarts the game state back to single/multi player selection
     const restartFunc = () => {
       if (confirm('Restart the game (current score and round count will be lost)?')) {
+        player1.resetName();
+        player2.resetName();
         board.restart();
         _renderChoice();
       }
@@ -308,10 +316,6 @@ const display = (() => {
 
 
 // To do:
-// // -Start game by only display two buttons, "Single Player", and "Multiplayer".
 // // -Create an AI that a person can play against in "Single Player".
-// // -Add a restart button that prompts the user for confirmation.
-// // -When confirmed, clears the display leaving only the two original buttons, 
-// //     and resets all variables, without ever reloading the web page.
 // // -Replace the name change prompt with a temporary input field in place 
 // //     of the name on the score board.
