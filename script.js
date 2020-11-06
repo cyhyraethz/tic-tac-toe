@@ -131,7 +131,7 @@ const board = (() => {
   // public method that fills in an empty square with the current player's symbol
   const setState = (index) => {
     if (_state[parseInt(index)] === '') { // checks if the selected square is empty
-      if (_round % 2 === 0) { // if an even number of rounds have been played, player1 goes first
+      if (_round % 2 !== 0) { // if an even number of rounds have been played, player1 goes first
         if (_count % 2 === 0) {
           _player = player1; // if an even number of moves have been played, it's player1's turn
         } else {
@@ -144,7 +144,23 @@ const board = (() => {
           _player = player1; // if an odd number of moves have been played, it's player1's turn
         }
       }
-      _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
+      if (_mode === 'multiplayer') {
+        _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
+      } else {
+        if (_player === player1) {
+          _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
+        } else {
+          let state = [..._state];
+          let indices = [];
+          state.forEach((v, i) => {
+            if (v === '') {
+              indices.push(i);
+            }
+          })
+          let i = indices[Math.floor(Math.random() * indices.length)];
+          _state[i] = _player.getSymbol();
+        }
+      }
       _count++; // increments the _count variable
     }
     display.renderState(); // rerender the state of the board, round, and score
