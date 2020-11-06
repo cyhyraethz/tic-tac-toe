@@ -61,6 +61,19 @@ const board = (() => {
     display.renderState();
   }
 
+  // private method that plays a turn for player2
+  const _playAI = () => {
+    _player = player2;
+    let indices = [];
+    _state.forEach((v, i) => {
+      if (v === '') {
+        indices.push(i);
+      }
+    })
+    let i = indices[Math.floor(Math.random() * indices.length)];
+    setState(i);
+  }
+
   // private method that checks if the game is over and announces the winner, or a tie, if it is
   const _gameOver = () => {
     let msg; // message to announce if game is over
@@ -80,31 +93,41 @@ const board = (() => {
     }
     win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
       if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
-        msg = `${_player.getName()} wins round ${_round}!`;
+        msg = `${_player.getName()} wins!`;
         _score[_player.getNumber()] += 1;
       }
     });
     if (typeof msg === 'string') { // if the current round is over, announce the winner and reset the board
       setTimeout(function(){
         _round++;
-        _reset(); // reset the board
+        setTimeout(function(){
+          _reset(); // reset the board
+        }, 500)
         _result.innerHTML = msg; // anounce the result of the current round
         if (msg === "It's a tie!") {
           _result.style.color = _neutralColor; // announce a tie in a neutral color
         } else {
           _result.style.color = _player.getColor(); // announce a win in the player's color
         }
+        display.renderState(); // rerender the display
       }, 0);
       setTimeout(function(){
-        _result.innerHTML = '';
+        _result.innerHTML = ''; // clear the display announcing the winner
       }, 2500)
+      setTimeout(function(){
+        if (_mode === 'singleplayer' && _round % 2 === 0) {
+          _playAI(); // if player1 went first last time and round is over, have player2 start next round
+        }
+      }, 1000)
+    } else if (_mode === 'singleplayer' && _player === player1) {
+      _playAI(); // if player1 just went and round is not over, play a turn for player2
     }
   }
   
-    // public method to set game mode to singleplayer
-    const singleplayer = () => {
-      _mode = 'singleplayer';
-    }
+  // public method to set game mode to singleplayer
+  const singleplayer = () => {
+    _mode = 'singleplayer';
+  }
 
   // public method to set game mode to multiplayer
   const multiplayer = () => {
@@ -144,23 +167,7 @@ const board = (() => {
           _player = player1; // if an odd number of moves have been played, it's player1's turn
         }
       }
-      if (_mode === 'multiplayer') {
-        _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
-      } else {
-        if (_player === player1) {
-          _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
-        } else {
-          let state = [..._state];
-          let indices = [];
-          state.forEach((v, i) => {
-            if (v === '') {
-              indices.push(i);
-            }
-          })
-          let i = indices[Math.floor(Math.random() * indices.length)];
-          _state[i] = _player.getSymbol();
-        }
-      }
+      _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
       _count++; // increments the _count variable
     }
     display.renderState(); // rerender the state of the board, round, and score
@@ -347,6 +354,7 @@ const display = (() => {
 
 
 // To do:
-// // -Create an AI that a person can play against in "Single Player".
+// // -Fix bug that occurs if the player clicks a square too soon after
+// //     a round ends, before the AI has a chance to take its turn.
 // // -Replace the name change prompt with a temporary input field in place 
 // //     of the name on the score board.
