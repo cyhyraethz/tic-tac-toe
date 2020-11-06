@@ -47,6 +47,7 @@ const player2 = Player('Player2', 'X', 'dodgerblue', 'player2');
 // module containing the state of the game
 const board = (() => {
   let _player; // player who's turn it is
+  let _mode; // game mode, singleplayer/multiplayer
   let _round = 1; // number of rounds that have been played
   let _count = 0; // number of moves that have been played, used to determine whose turn it is
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
@@ -99,8 +100,18 @@ const board = (() => {
       }, 2500)
     }
   }
+  
+    // public method to set game mode to singleplayer
+    const singleplayer = () => {
+      _mode = 'singleplayer';
+    }
 
-  // public method to restart the state of the game
+  // public method to set game mode to multiplayer
+  const multiplayer = () => {
+    _mode = 'multiplayer';
+  }
+
+  // public method to reset the state of the game
   const restart = () => {
     _round = 1;
     _count = 0;
@@ -142,6 +153,8 @@ const board = (() => {
 
   // make public methods accessible
   return {
+    singleplayer,
+    multiplayer,
     restart,
     getRound,
     getScore,
@@ -158,12 +171,14 @@ const display = (() => {
   const _renderChoice = () => {
     // function that starts game against an AI opponent
     const singleFunc = () => {
+      board.singleplayer();
       _renderDisplay();
       renderState();
     }
 
     // function that starts game against another player
     const multiFunc = () => {
+      board.multiplayer();
       _renderDisplay();
       renderState();
     }
