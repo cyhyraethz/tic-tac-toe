@@ -75,15 +75,15 @@ const board = (() => {
       [0, 4, 8], // diagonal down
       [2, 4, 6], // diagonal up
     ];
+    if (_count === _state.length) { // if every square is filled in, assign a string to msg announcing a tie
+      msg = "It's a tie!";
+    }
     win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
       if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
         msg = `${_player.getName()} wins round ${_round}!`;
         _score[_player.getNumber()] += 1;
       }
     });
-    if (_count === _state.length) { // if every square is filled in, assign a string to msg announcing a tie
-      msg = "It's a tie!";
-    }
     if (typeof msg === 'string') { // if the current round is over, announce the winner and reset the board
       setTimeout(function(){
         _round++;
