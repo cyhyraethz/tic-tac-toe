@@ -65,6 +65,7 @@ const board = (() => {
   const _playAI = () => {
     setTimeout(function(){
       _player = player2;
+      _count++;
       let indices = [];
       _state.forEach((v, i) => {
         if (v === '') {
@@ -72,9 +73,27 @@ const board = (() => {
         }
       })
       let i = indices[Math.floor(Math.random() * indices.length)];
-      setState(i);
+      _state[i] = _player.getSymbol();
+      display.renderState();
+      _gameOver();
     }, 500)
+  }
 
+  // private method that determine's which player's turn it is
+  const _setPlayer = () => {
+    if (_round % 2 !== 0) { // if an even number of rounds have been played, player1 goes first
+      if (_count % 2 === 0) {
+        _player = player1; // if an even number of moves have been played, it's player1's turn
+      } else {
+        _player = player2; // if an odd number of moves have been played, it's player2's turn
+      }
+    } else { // if an odd number of rounds have been played, player2 goes first
+      if (_count % 2 === 0) {
+        _player = player2; // if an even number of moves have been played, it's player2's turn
+      } else {
+        _player = player1; // if an odd number of moves have been played, it's player1's turn
+      }
+    }
   }
 
   // private method that checks if the game is over and announces the winner, or a tie, if it is
@@ -156,25 +175,20 @@ const board = (() => {
 
   // public method that fills in an empty square with the current player's symbol
   const setState = (index) => {
+    _setPlayer();
     if (_state[parseInt(index)] === '') { // checks if the selected square is empty
-      if (_round % 2 !== 0) { // if an even number of rounds have been played, player1 goes first
-        if (_count % 2 === 0) {
-          _player = player1; // if an even number of moves have been played, it's player1's turn
-        } else {
-          _player = player2; // if an odd number of moves have been played, it's player2's turn
-        }
-      } else { // if an odd number of rounds have been played, player2 goes first
-        if (_count % 2 === 0) {
-          _player = player2; // if an even number of moves have been played, it's player2's turn
-        } else {
-          _player = player1; // if an odd number of moves have been played, it's player1's turn
-        }
+      if (_mode === 'multiplayer') {
+        _count++; // increments the _count variable
+        _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
+        display.renderState(); // rerender the state of the board, round, and score
+        _gameOver(); // check for a winner 
+      } else if (_mode === 'singleplayer' && _player === player1) {
+        _count++; // increments the _count variable
+        _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
+        display.renderState(); // rerender the state of the board, round, and score
+        _gameOver(); // check for a winner 
       }
-      _state[parseInt(index)] = _player.getSymbol(); // fills in the selected square with the current player's symbol
-      _count++; // increments the _count variable
     }
-    display.renderState(); // rerender the state of the board, round, and score
-    _gameOver(); // check for a winner
   }
 
   // make public methods accessible
@@ -357,7 +371,5 @@ const display = (() => {
 
 
 // To do:
-// // -Fix bug that occurs if the player clicks a square too soon after
-// //     a round ends, before the AI has a chance to take its turn.
 // // -Replace the name change prompt with a temporary input field in place 
 // //     of the name on the score board.
