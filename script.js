@@ -63,15 +63,18 @@ const board = (() => {
 
   // private method that plays a turn for player2
   const _playAI = () => {
-    _player = player2;
-    let indices = [];
-    _state.forEach((v, i) => {
-      if (v === '') {
-        indices.push(i);
-      }
-    })
-    let i = indices[Math.floor(Math.random() * indices.length)];
-    setState(i);
+    setTimeout(function(){
+      _player = player2;
+      let indices = [];
+      _state.forEach((v, i) => {
+        if (v === '') {
+          indices.push(i);
+        }
+      })
+      let i = indices[Math.floor(Math.random() * indices.length)];
+      setState(i);
+    }, 500)
+
   }
 
   // private method that checks if the game is over and announces the winner, or a tie, if it is
