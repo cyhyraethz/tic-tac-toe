@@ -54,7 +54,7 @@ const board = (() => {
   let _score = { player1: 0, player2: 0 }; // number of rounds won by each player
   const _neutralColor = "forestgreen"; // neutral color for announcing a tie
 
-  // private method that resets the board
+  // private method that resets the current round
   const _reset = () => {
     _count = 0;
     _state = ['', '', '', '', '', '', '', '', ''];
@@ -63,19 +63,19 @@ const board = (() => {
 
   // private method that plays a turn for player2
   const _playAI = () => {
-    setTimeout(function(){
+    setTimeout(function(){ // wait 500 ms to take AI's turn
       _player = player2;
       _count++;
-      let indices = [];
+      let indices = []; // array to hold all indices of empty squares
       _state.forEach((v, i) => {
         if (v === '') {
-          indices.push(i);
+          indices.push(i); // push all indices of empty squares to array
         }
       })
-      let i = indices[Math.floor(Math.random() * indices.length)];
-      _state[i] = _player.getSymbol();
-      display.renderState();
-      _gameOver();
+      let i = indices[Math.floor(Math.random() * indices.length)]; // random index of empty square
+      _state[i] = _player.getSymbol(); // AI plays in a random empty square
+      display.renderState(); // rerender the board
+      _gameOver(); // check if game is over
     }, 500)
   }
 
@@ -373,3 +373,5 @@ const display = (() => {
 // To do:
 // // -Replace the name change prompt with a temporary input field in place 
 // //     of the name on the score board.
+// // -Replace the restart prompt with a custom prompt, added to and hidden
+// //     from the dom, and style with CSS.
