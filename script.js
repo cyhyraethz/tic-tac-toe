@@ -79,35 +79,35 @@ const board = (() => {
         indices.push(i); // push all indices of empty squares to array
       }
     })
-    return indices;
+    return indices; // return the array of the indices of all empty squares
   }
 
   // private method that finds the best move
   const _findBestMove = () => {
-    let indices = _listEmptySquares();
-    let i = indices[Math.floor(Math.random() * indices.length)];
-    _win.forEach(a => {
-      if (_state[a[0]]) {
-        if (_state[a[0]] === _state[a[1]]) {
-          if (!_state[a[2]]) {
-            i = a[2];
+    let indices = _listEmptySquares(); // array of indices of all empty squares
+    let i = indices[Math.floor(Math.random() * indices.length)]; // set default move to a random empty square
+    _win.forEach(a => { // check each array containing the indices of three consecutive squares
+      if (_state[a[0]]) { // if the first square contains a value
+        if (_state[a[0]] === _state[a[1]]) { // if the first square contains the same value as the second square
+          if (!_state[a[2]]) { // if the third square is empty
+            i = a[2]; // the third square is the move
           }
         }
-        if (_state[a[0]] === _state[a[2]]) {
-          if (!_state[a[1]]) {
-            i = a[1];
+        if (_state[a[0]] === _state[a[2]]) { // if the first square contains the same value as the third square
+          if (!_state[a[1]]) { // if the second square is empty
+            i = a[1]; // the second square is the move
           }
         }
       }
-      if (_state[a[1]]) {
-        if (_state[a[1]] === _state[a[2]]) {
-          if (!_state[a[0]]) {
-            i = a[0];
+      if (_state[a[1]]) { // if the second square contains a value
+        if (_state[a[1]] === _state[a[2]]) { // if the second square contains the same value as the third square
+          if (!_state[a[0]]) { // if the first square is empty
+            i = a[0]; // the first square is the move
           }
         }
       }
     })
-    return i;
+    return i; // return the index of the square that is the best move
   }
 
   // private method that plays a turn for player2
