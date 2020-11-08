@@ -53,7 +53,17 @@ const board = (() => {
   let _state = ['', '', '', '', '', '', '', '', '']; // state of the board, initialized as an empty board
   let _score = { player1: 0, player2: 0 }; // number of rounds won by each player
   const _neutralColor = "forestgreen"; // neutral color for announcing a tie
-
+  const _win = [ // list of win conditions, indices of consecutive squares
+    [0, 1, 2], // top row
+    [3, 4, 5], // middle row
+    [6, 7, 8], // bottom row
+    [0, 3, 6], // left column
+    [1, 4, 7], // center column
+    [2, 5, 8], // right column
+    [0, 4, 8], // diagonal down
+    [2, 4, 6], // diagonal up
+  ];
+  
   // private method that resets the current round
   const _reset = () => {
     _count = 0;
@@ -61,18 +71,51 @@ const board = (() => {
     display.renderState();
   }
 
+  // private method that returns an array of the indices of all empty squares
+  const _listEmptySquares = () => {
+    let indices = []; // array to hold all indices of empty squares
+    _state.forEach((v, i) => {
+      if (v === '') {
+        indices.push(i); // push all indices of empty squares to array
+      }
+    })
+    return indices;
+  }
+
+  // private method that finds the best move
+  const _findBestMove = () => {
+    let indices = _listEmptySquares();
+    let i = indices[Math.floor(Math.random() * indices.length)];
+    _win.forEach(a => {
+      if (_state[a[0]]) {
+        if (_state[a[0]] === _state[a[1]]) {
+          if (!_state[a[2]]) {
+            i = a[2];
+          }
+        }
+        if (_state[a[0]] === _state[a[2]]) {
+          if (!_state[a[1]]) {
+            i = a[1];
+          }
+        }
+      }
+      if (_state[a[1]]) {
+        if (_state[a[1]] === _state[a[2]]) {
+          if (!_state[a[0]]) {
+            i = a[0];
+          }
+        }
+      }
+    })
+    return i;
+  }
+
   // private method that plays a turn for player2
   const _playAI = () => {
     setTimeout(function(){ // wait 500 ms to take AI's turn
       _player = player2;
       _count++;
-      let indices = []; // array to hold all indices of empty squares
-      _state.forEach((v, i) => {
-        if (v === '') {
-          indices.push(i); // push all indices of empty squares to array
-        }
-      })
-      let i = indices[Math.floor(Math.random() * indices.length)]; // random index of empty square
+      let i = _findBestMove();
       _state[i] = _player.getSymbol(); // AI plays in a random empty square
       display.renderState(); // rerender the board
       _gameOver(); // check if game is over
@@ -100,20 +143,10 @@ const board = (() => {
   const _gameOver = () => {
     let msg; // message to announce if game is over
     const _result = document.getElementById('result'); // element for announcing a winner
-    const win = [ // list of win conditions, indices of consecutive squares
-      [0, 1, 2], // top row
-      [3, 4, 5], // middle row
-      [6, 7, 8], // bottom row
-      [0, 3, 6], // left column
-      [1, 4, 7], // center column
-      [2, 5, 8], // right column
-      [0, 4, 8], // diagonal down
-      [2, 4, 6], // diagonal up
-    ];
     if (_count === _state.length) { // if every square is filled in, assign a string to msg announcing a tie
       msg = "It's a tie!";
     }
-    win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
+    _win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
       if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
         msg = `${_player.getName()} wins!`;
         _score[_player.getNumber()] += 1;
