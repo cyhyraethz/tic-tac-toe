@@ -87,6 +87,12 @@ const board = (() => {
   const _findBestMove = () => {
     let indices = _listEmptySquares(); // array of indices of all empty squares
     let i = indices[Math.floor(Math.random() * indices.length)]; // set default move to a random empty square
+    if (_difficulty === 'unbeatable') {
+      if (_count === 0) { // if the AI is going first
+        let cornerSquares = [0, 2, 6, 8]; // array of indices of corner squares
+        i = cornerSquares[Math.floor(Math.random() * corners.length)]; // play in a random corner square
+      }
+    }
     if (_difficulty === 'normal' || _difficulty === 'unbeatable') {
       _win.forEach(a => { // check each array containing the indices of three consecutive squares
         if (_state[a[0]]) { // if the first square contains a value
@@ -117,9 +123,9 @@ const board = (() => {
   const _playAI = () => {
     setTimeout(function(){ // wait 500 ms to take AI's turn
       _player = player2;
-      _count++;
       let i = _findBestMove();
       _state[i] = _player.getSymbol(); // AI plays in a random empty square
+      _count++;
       display.renderState(); // rerender the board
       _gameOver(); // check if game is over
     }, 500)
