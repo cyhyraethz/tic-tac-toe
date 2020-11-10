@@ -46,6 +46,7 @@ const player2 = Player('Player2', 'X', 'dodgerblue', 'player2');
 
 // module containing the state of the game
 const board = (() => {
+  let _difficulty; // level of AI
   let _player; // player who's turn it is
   let _mode; // game mode, singleplayer/multiplayer
   let _round = 1; // number of rounds that have been played
@@ -189,6 +190,21 @@ const board = (() => {
     _mode = 'multiplayer';
   }
 
+  // public method to set game mode to easy
+  const easy = () => {
+    _difficulty = 'easy';
+  }
+
+  // public method to set game mode to normal
+  const normal = () => {
+    _difficulty = 'normal';
+  }
+
+  // public method to set game mode to unbeatable
+  const unbeatable = () => {
+    _difficulty = 'unbeatable';
+  }
+
   // public method to reset the state of the game
   const restart = () => {
     _round = 1;
@@ -228,6 +244,9 @@ const board = (() => {
   return {
     singleplayer,
     multiplayer,
+    easy,
+    normal,
+    unbeatable,
     restart,
     getRound,
     getScore,
@@ -241,11 +260,11 @@ const board = (() => {
 // module for controlling the display
 const display = (() => {
   // private method that replaces the display with singleplayer and multiplayer choice
-  const _renderChoice = () => {
+  const _selectMode = () => {
     // function that starts game against an AI opponent
     const singleFunc = () => {
       board.singleplayer();
-      _renderDisplay();
+      _selectDifficulty();
       renderState();
     }
 
@@ -278,7 +297,58 @@ const display = (() => {
   };
 
   // initializes the page with buttons for player to choose singleplayer or multiplayer
-  _renderChoice();
+  _selectMode();
+
+  // private method that replaces the display with buttons representing difficulty settings
+  _selectDifficulty = () => {
+    // function that starts the game on the unbeatable difficulty setting
+    const unbeatableFunc = () => {
+      board.unbeatable();
+      _renderDisplay();
+      _renderState();
+    }
+    
+    // function that starts the game on the normal difficulty setting
+    const normalFunc = () => {
+      board.normal();
+      _renderDisplay();
+      _renderState();
+    }
+    
+    // function that starts the game on the easy difficulty setting
+    const easyFunc = () => {
+      board.easy();
+      _renderDisplay();
+      _renderState();
+    }
+
+    // element that elements are appended to
+    const display = document.getElementById('display');
+
+    // wipes the display, removing the board
+    display.innerHTML = '';
+
+    // button that starts the game on the easy difficulty setting
+    const easyButton = document.createElement('button');
+    easyButton.className = 'btn';
+    easyButton.onclick = easyFunc;
+    easyButton.innerHTML = 'Easy';
+    display.appendChild(easyButton);
+
+    // button that starts the game on the normal difficulty setting
+    const normalButton = document.createElement('button');
+    normalButton.className = 'btn';
+    normalButton.onclick = normalFunc;
+    normalButton.innerHTML = 'Normal';
+    display.appendChild(normalButton);
+
+    // button that starts the game on the unbeatable difficulty setting
+    const unbeatableButton = document.createElement('button');
+    unbeatableButton.className = 'btn';
+    unbeatableButton.onclick = unbeatableFunc;
+    unbeatableButton.innerHTML = 'Unbeatable';
+    display.appendChild(unbeatableButton);
+  }
 
   // private method that renders the display, replacing buttons with board, score, round
   const _renderDisplay = () => {
@@ -288,7 +358,7 @@ const display = (() => {
         player1.resetName();
         player2.resetName();
         board.restart();
-        _renderChoice();
+        _selectMode();
       }
     }
 
