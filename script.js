@@ -87,15 +87,12 @@ const board = (() => {
   const _findBestMove = () => {
     let indices = _listEmptySquares(); // array of indices of all empty squares
     let i = indices[Math.floor(Math.random() * indices.length)]; // set default move to a random empty square
-    if (_difficulty === 'unbeatable') {
-      if (_count === 0) { // if the AI is going first
-        let cornerSquares = [0, 2, 6, 8]; // array of indices of corner squares
-        i = cornerSquares[Math.floor(Math.random() * corners.length)]; // play in a random corner square
-      }
-    }
-    if (_difficulty === 'normal' || _difficulty === 'unbeatable') {
+
+    // function that checks for a winning move
+    const checkWin = (sym) => {
+      let symbol = [...sym];
       _win.forEach(a => { // check each array containing the indices of three consecutive squares
-        if (_state[a[0]]) { // if the first square contains a value
+        if (symbol.includes(_state[a[0]])) { // if the first square contains a value
           if (_state[a[0]] === _state[a[1]]) { // if the first square contains the same value as the second square
             if (!_state[a[2]]) { // if the third square is empty
               i = a[2]; // the third square is the move
@@ -107,7 +104,7 @@ const board = (() => {
             }
           }
         }
-        if (_state[a[1]]) { // if the second square contains a value
+        if (symbol.includes(_state[a[1]])) { // if the second square contains a value
           if (_state[a[1]] === _state[a[2]]) { // if the second square contains the same value as the third square
             if (!_state[a[0]]) { // if the first square is empty
               i = a[0]; // the first square is the move
@@ -115,6 +112,20 @@ const board = (() => {
           }
         }
       })
+    }
+    
+    if (_difficulty === 'unbeatable') {
+      if (_count === 0) { // if the AI is going first
+        let corner = [0, 2, 6, 8]; // array of indices of corner squares
+        i = corner[Math.floor(Math.random() * corner.length)]; // play in a random corner square
+      }
+    }
+    if (_difficulty === 'normal') {
+      checkWin(player1.getSymbol(), player2.getSymbol());
+    }
+    if (_difficulty === 'unbeatable') {
+      checkWin(player1.getSymbol());
+      checkWin(player2.getSymbol());
     }
     return i; // return the index of the square that is the best move
   }
@@ -273,7 +284,6 @@ const display = (() => {
     const singleFunc = () => {
       board.singleplayer();
       _selectDifficulty();
-      renderState();
     }
 
     // function that starts game against another player
@@ -313,21 +323,21 @@ const display = (() => {
     const unbeatableFunc = () => {
       board.unbeatable();
       _renderDisplay();
-      _renderState();
+      renderState();
     }
     
     // function that starts the game on the normal difficulty setting
     const normalFunc = () => {
       board.normal();
       _renderDisplay();
-      _renderState();
+      renderState();
     }
     
     // function that starts the game on the easy difficulty setting
     const easyFunc = () => {
       board.easy();
       _renderDisplay();
-      _renderState();
+      renderState();
     }
 
     // element that elements are appended to
