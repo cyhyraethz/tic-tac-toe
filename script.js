@@ -88,11 +88,10 @@ const board = (() => {
     let indices = _listEmptySquares(); // array of indices of all empty squares
     let i = indices[Math.floor(Math.random() * indices.length)]; // set default move to a random empty square
 
-    // function that checks for a winning move
+    // function that checks for a winning move for a given symbol
     const checkWin = (sym) => {
-      let symbol = [...sym];
       _win.forEach(a => { // check each array containing the indices of three consecutive squares
-        if (symbol.includes(_state[a[0]])) { // if the first square contains a value
+        if ([...sym].includes(_state[a[0]])) { // if the first square contains the given symbol or symbols
           if (_state[a[0]] === _state[a[1]]) { // if the first square contains the same value as the second square
             if (!_state[a[2]]) { // if the third square is empty
               i = a[2]; // the third square is the move
@@ -104,7 +103,7 @@ const board = (() => {
             }
           }
         }
-        if (symbol.includes(_state[a[1]])) { // if the second square contains a value
+        if ([...sym].includes(_state[a[1]])) { // if the second square contains the given symbol or symbols
           if (_state[a[1]] === _state[a[2]]) { // if the second square contains the same value as the third square
             if (!_state[a[0]]) { // if the first square is empty
               i = a[0]; // the first square is the move
@@ -114,18 +113,18 @@ const board = (() => {
       })
     }
     
-    if (_difficulty === 'unbeatable') {
+    if (_difficulty === 'unbeatable') { // takes a corner for the first move
       if (_count === 0) { // if the AI is going first
         let corner = [0, 2, 6, 8]; // array of indices of corner squares
         i = corner[Math.floor(Math.random() * corner.length)]; // play in a random corner square
       }
     }
-    if (_difficulty === 'normal') {
-      checkWin(player1.getSymbol(), player2.getSymbol());
+    if (_difficulty === 'normal') { // gives equal weight to preventing a loss as to winning
+      checkWin(player1.getSymbol(), player2.getSymbol()); // select move that prevents a loss or wins
     }
-    if (_difficulty === 'unbeatable') {
-      checkWin(player1.getSymbol());
-      checkWin(player2.getSymbol());
+    if (_difficulty === 'unbeatable') { // gives greater weight to winning than preventing a loss
+      checkWin(player1.getSymbol()); // select move that prevents a loss, if one exists
+      checkWin(player2.getSymbol()); // select move that wins, if one exists
     }
     return i; // return the index of the square that is the best move
   }
