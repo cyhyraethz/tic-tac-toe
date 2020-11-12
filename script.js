@@ -71,7 +71,7 @@ const board = (() => {
     _state = ['', '', '', '', '', '', '', '', ''];
     display.renderState();
   }
-
+  
   // private method that returns an array of the indices of all empty squares
   const _listEmptySquares = () => {
     let indices = []; // array to hold all indices of empty squares
@@ -81,6 +81,43 @@ const board = (() => {
       }
     })
     return indices; // return the array of the indices of all empty squares
+  }
+  
+  const _minimax = (state, player) => {
+    // function to check if given player has won
+    const checkWin = () => {
+      _win.forEach(a => { // check win conditions against given state
+        if (state[a[0]] === state[a[1]] && state[a[0]] === state[a[2]]) { // if there is a winner
+          if (state[a[0]] === player.getSymbol()) { // return 1 if winner is given player
+            return 1;
+          } else { // return -1 if the winner is not given player
+            return -1;
+          }
+        }
+      });
+    }
+
+    checkWin(); // check if given player has won
+
+    let move = -1;
+    let score = -2;
+
+    let empty = _listEmptySquares(); // array of indices of empty squares
+
+    // for loop to iterate over each possible move
+    for (let i = 0; i < empty.length; i++) {
+      let board = [...state];
+      board[empty[i]] = player.getSymbol();
+      let newScore = _minimax(board, player);
+      if (newScore > score) {
+        score = newScore;
+        move = i;
+      }
+    }
+    if (move === -1) {
+      return 0;
+    }
+    return score;
   }
 
   // private method that finds the best move
