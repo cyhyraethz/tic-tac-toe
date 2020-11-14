@@ -95,6 +95,9 @@ const board = (() => {
           }
         }
       });
+      if (!state.includes('')) {
+        return 0;
+      }
     }
 
     checkWin(); // check if given player has won
