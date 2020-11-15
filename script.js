@@ -94,9 +94,9 @@ const board = (() => {
     return win;
   }
   
-  // // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
-  // _state = ["O", "", "X", "X", "", "X", "", "O", "O"];
-  // // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
+  // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
+  _state = ["O", "", "X", "X", "", "X", "", "O", "O"];
+  // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
 
   // private method that finds the best move
   const _findBestMove = () => {
@@ -132,6 +132,11 @@ const board = (() => {
       if (_count === 0) { // if the AI is going first
         let corner = [0, 2, 6, 8]; // array of indices of corner squares
         i = corner[Math.floor(Math.random() * corner.length)]; // play in a random corner square
+      } else {
+        // UNBEATABLE AI CODE USING MINIMAX FUNCTION
+        // original state is the _state variable
+        // human player is player1, red O
+        // computer is player2, blue X
       }
     }
     if (_difficulty === 'normal') { // gives equal weight to preventing a loss as to winning
@@ -484,18 +489,18 @@ const display = (() => {
     for (let i = 0; i < state.length; i++) { // iterates over the state array and the grid squares
       const square = document.getElementById(i.toString()); // grid square corresponding to the current state value
       square.innerHTML = state[i]; // display the current state value
-      if (state[i] === 'O') {
+      if (state[i] === player1.getSymbol()) {
         square.style.color = player1.getColor(); // if current state value is an O, show it in player1's color
-      } else if (state[i] === 'X') {
+      } else if (state[i] === player2.getSymbol()) {
         square.style.color = player2.getColor(); // if current state value is an X, show it in player2's color
       }
     }
   }
 
-  // // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
-  // _renderDisplay();
-  // renderState();
-  // // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
+  // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
+  _renderDisplay();
+  renderState();
+  // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
 
   // make public methods accessible
   return {
