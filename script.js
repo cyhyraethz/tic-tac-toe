@@ -71,65 +71,40 @@ const board = (() => {
     _state = ['', '', '', '', '', '', '', '', ''];
     display.renderState();
   }
-  
+
   // private method that returns an array of the indices of all empty squares
-  const _listEmptySquares = () => {
+  const _listEmptySquares = (state) => {
     let indices = []; // array to hold all indices of empty squares
-    _state.forEach((v, i) => {
+    state.forEach((v, i) => {
       if (v === '') {
         indices.push(i); // push all indices of empty squares to array
       }
     })
     return indices; // return the array of the indices of all empty squares
   }
-  
-  const _minimax = (state, player) => {
-    // function to check if given player has won
-    const checkWin = () => {
-      _win.forEach(a => { // check win conditions against given state
-        if (state[a[0]] === state[a[1]] && state[a[0]] === state[a[2]]) { // if there is a winner
-          if (state[a[0]] === player.getSymbol()) { // return 1 if winner is given player
-            return 1;
-          } else { // return -1 if the winner is not given player
-            return -1;
-          }
-        }
-      });
-      if (!state.includes('')) {
-        return 0;
+
+  // private method that checks if a specific player won with a specific board state
+  const _checkWin = (state, player) => {
+    let win = false;
+    _win.forEach(a => {
+      if (state[a[0]] === player.getSymbol() && state[a[0]] === state[a[1]] && state[a[0]] === state[a[2]]) {
+        win = true;
       }
-    }
-
-    checkWin(); // check if given player has won
-
-    let move = -1;
-    let score = -2;
-
-    let empty = _listEmptySquares(); // array of indices of empty squares
-
-    // for loop to iterate over each possible move
-    for (let i = 0; i < empty.length; i++) {
-      let board = [...state];
-      board[empty[i]] = player.getSymbol();
-      let newScore = _minimax(board, player);
-      if (newScore > score) {
-        score = newScore;
-        move = i;
-      }
-    }
-    if (move === -1) {
-      return 0;
-    }
-    return score;
+    });
+    return win;
   }
+  
+  // // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
+  // _state = ["O", "", "X", "X", "", "X", "", "O", "O"];
+  // // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
 
   // private method that finds the best move
   const _findBestMove = () => {
-    let indices = _listEmptySquares(); // array of indices of all empty squares
+    let indices = _listEmptySquares(_state); // array of indices of all empty squares
     let i = indices[Math.floor(Math.random() * indices.length)]; // set default move to a random empty square
 
     // function that checks for a winning move for a given symbol
-    const checkWin = (sym) => {
+    const bestMove = (sym) => {
       _win.forEach(a => { // check each array containing the indices of three consecutive squares
         if ([...sym].includes(_state[a[0]])) { // if the first square contains the given symbol or symbols
           if (_state[a[0]] === _state[a[1]]) { // if the first square contains the same value as the second square
@@ -160,11 +135,11 @@ const board = (() => {
       }
     }
     if (_difficulty === 'normal') { // gives equal weight to preventing a loss as to winning
-      checkWin(player1.getSymbol(), player2.getSymbol()); // select move that prevents a loss or wins
+      bestMove(player1.getSymbol(), player2.getSymbol()); // select move that prevents a loss or wins
     }
     if (_difficulty === 'unbeatable') { // gives greater weight to winning than preventing a loss
-      checkWin(player1.getSymbol()); // select move that prevents a loss, if one exists
-      checkWin(player2.getSymbol()); // select move that wins, if one exists
+      bestMove(player1.getSymbol()); // select move that prevents a loss, if one exists
+      bestMove(player2.getSymbol()); // select move that wins, if one exists
     }
     return i; // return the index of the square that is the best move
   }
@@ -205,12 +180,10 @@ const board = (() => {
     if (_count === _state.length) { // if every square is filled in, assign a string to msg announcing a tie
       msg = "It's a tie!";
     }
-    _win.forEach(a => { // if any of the win conditions has been met, assign a string announcing the winner
-      if (_state[a[0]] && _state[a[0]] === _state[a[1]] && _state[a[0]] === _state[a[2]]) {
-        msg = `${_player.getName()} wins!`;
-        _score[_player.getNumber()] += 1;
-      }
-    });
+    if (_checkWin(_state, _player)) { // if the current player has won, assign a string announcing the winner
+      msg = `${_player.getName()} wins!`;
+      _score[_player.getNumber()] += 1;
+    }
     if (typeof msg === 'string') { // if the current round is over, announce the winner and reset the board
       setTimeout(function(){
         _round++;
@@ -518,6 +491,11 @@ const display = (() => {
       }
     }
   }
+
+  // // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
+  // _renderDisplay();
+  // renderState();
+  // // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
 
   // make public methods accessible
   return {
