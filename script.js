@@ -39,8 +39,8 @@ const Player = (name, symbol, color, number) => {
 
 
 // create sample players
-const player1 = Player('Player1', 'O', 'firebrick', 'player1');
-const player2 = Player('Player2', 'X', 'dodgerblue', 'player2');
+const player1 = Player('Player1', 'X', 'firebrick', 'player1');
+const player2 = Player('Player2', 'O', 'dodgerblue', 'player2');
 
 
 
@@ -93,60 +93,109 @@ const board = (() => {
     });
     return win;
   }
-  
-  // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
-  _state = ["O", "", "X", "X", "", "X", "", "O", "O"];
-  // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
 
   // private method that finds the best move
   const _findBestMove = () => {
-    let indices = _listEmptySquares(_state); // array of indices of all empty squares
+    const board = _state // the original state of the board
+    const human = player1; // human player is player1, red X
+    const computer = player2; // computer is player2, blue O
+    let indices = _listEmptySquares(board); // array of indices of all empty squares
     let i = indices[Math.floor(Math.random() * indices.length)]; // set default move to a random empty square
 
     // function that checks for a winning move for a given symbol
     const bestMove = (sym) => {
       _win.forEach(a => { // check each array containing the indices of three consecutive squares
-        if ([...sym].includes(_state[a[0]])) { // if the first square contains the given symbol or symbols
-          if (_state[a[0]] === _state[a[1]]) { // if the first square contains the same value as the second square
-            if (!_state[a[2]]) { // if the third square is empty
+        if ([...sym].includes(board[a[0]])) { // if the first square contains the given symbol or symbols
+          if (board[a[0]] === board[a[1]]) { // if the first square contains the same value as the second square
+            if (!board[a[2]]) { // if the third square is empty
               i = a[2]; // the third square is the move
             }
           }
-          if (_state[a[0]] === _state[a[2]]) { // if the first square contains the same value as the third square
-            if (!_state[a[1]]) { // if the second square is empty
+          if (board[a[0]] === board[a[2]]) { // if the first square contains the same value as the third square
+            if (!board[a[1]]) { // if the second square is empty
               i = a[1]; // the second square is the move
             }
           }
         }
-        if ([...sym].includes(_state[a[1]])) { // if the second square contains the given symbol or symbols
-          if (_state[a[1]] === _state[a[2]]) { // if the second square contains the same value as the third square
-            if (!_state[a[0]]) { // if the first square is empty
+        if ([...sym].includes(board[a[1]])) { // if the second square contains the given symbol or symbols
+          if (board[a[1]] === board[a[2]]) { // if the second square contains the same value as the third square
+            if (!board[a[0]]) { // if the first square is empty
               i = a[0]; // the first square is the move
             }
           }
         }
       })
     }
-    
-    if (_difficulty === 'unbeatable') { // takes a corner for the first move
-      if (_count === 0) { // if the AI is going first
-        let corner = [0, 2, 6, 8]; // array of indices of corner squares
-        i = corner[Math.floor(Math.random() * corner.length)]; // play in a random corner square
-      } else {
-        // UNBEATABLE AI CODE USING MINIMAX FUNCTION
-        // original state is the _state variable
-        // human player is player1, red O
-        // computer is player2, blue X
+
+    // minimax function
+    const minimax = (board, player) => {
+      let empty = _listEmptySquares(board); // array of indices of empty squares
+
+      if (_checkWin(board, human)) { // if the human player wins, return score of -10
+        return { score: -10 };
+      } else if (_checkWin(board, computer)) { // if the computer wins, return score of 10
+        return { score: 10 };
+      } else if (empty.length === 0) { // if it's a tie, return score of 0
+        return { score: 0 };
       }
+
+      let moves = []; // empty array to hold all possible moves
+
+      for (let i = 0; i < empty.length; i++) {
+        let move = {}; // object to hold the index and score of a move
+        move.index = empty[i]; // assign a value for the index
+
+        board[empty[i]] = player.getSymbol(); // set empty square to current player's symbol
+
+        if (player === computer) { // get score from calling minimax on opponent of current player
+          let result = minimax(board, human);
+          move.score = result.score;
+        } else {
+          let result = minimax(board, computer);
+          move.score = result.score;
+        }
+
+        board[empty[i]] = ''; // reset square to empty
+
+        moves.push(move); // push the move object to the moves array
+      }
+
+      let bestMove; // variable to hold the best move for the computer
+
+      if (player === computer) {
+        let bestScore = -10000;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      } else {
+        let bestScore = 10000;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = i;
+          }
+        }
+      }
+      return moves[bestMove];
     }
+    
     if (_difficulty === 'normal') { // gives equal weight to preventing a loss as to winning
       bestMove(player1.getSymbol(), player2.getSymbol()); // select move that prevents a loss or wins
     }
     if (_difficulty === 'unbeatable') { // gives greater weight to winning than preventing a loss
+      if (_count === 0) { // if computer is going first
+        let corner = [0, 2, 6, 8]; // array of indices of corner squares
+        i = corner[Math.floor(Math.random() * corner.length)]; // play in a random corner square
+      } else {
+        i = minimax(board, computer).index; // use minimax function to predict the best possible move
+      }
       bestMove(player1.getSymbol()); // select move that prevents a loss, if one exists
       bestMove(player2.getSymbol()); // select move that wins, if one exists
     }
-    return i; // return the index of the square that is the best move
+    return i; // return the index of the square that is the best move for the difficulty level
   }
 
   // private method that plays a turn for player2
@@ -496,11 +545,6 @@ const display = (() => {
       }
     }
   }
-
-  // DELETE THE CODE BELOW AFTER GETTING MINIMAX TO WORK
-  _renderDisplay();
-  renderState();
-  // DELETE THE CODE ABOVE AFTER GETTING MINIMAX TO WORK
 
   // make public methods accessible
   return {
