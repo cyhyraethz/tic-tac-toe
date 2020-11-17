@@ -183,7 +183,7 @@ const board = (() => {
     }
     
     if (_difficulty === 'normal') { // gives equal weight to preventing a loss as to winning
-      bestMove(player1.getSymbol(), player2.getSymbol()); // select move that prevents a loss or wins
+      bestMove(human.getSymbol(), player2.getSymbol()); // select move that prevents a loss or wins
     }
     if (_difficulty === 'unbeatable') { // gives greater weight to winning than preventing a loss
       if (_count === 0) { // if computer is going first
@@ -192,8 +192,8 @@ const board = (() => {
       } else {
         i = minimax(board, computer).index; // use minimax function to predict the best possible move
       }
-      bestMove(player1.getSymbol()); // select move that prevents a loss, if one exists
-      bestMove(player2.getSymbol()); // select move that wins, if one exists
+      bestMove(human.getSymbol()); // select move that prevents a loss, if one exists
+      bestMove(computer.getSymbol()); // select move that wins, if one exists
     }
     return i; // return the index of the square that is the best move for the difficulty level
   }
